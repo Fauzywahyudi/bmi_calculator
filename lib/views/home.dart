@@ -1,12 +1,9 @@
 import 'package:calculator_bmi/views/result.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:swipedetector/swipedetector.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'dart:io';
 
 class Home extends StatefulWidget {
   static const routeName = '/Home';
@@ -70,7 +67,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<bool> _dialog()async{
+  _dialog() async {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.INFO,
@@ -86,28 +83,24 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
-  Future<bool> _onWillPop()async{
+  Future<bool> _onWillPop() async {
     if (isShowForm) {
       setState(() {
         isShowForm = false;
       });
       return false;
     } else {
-      _dialog();
+      return _dialog();
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -119,13 +112,12 @@ class _HomeState extends State<Home> {
         child: WillPopScope(
           onWillPop: _onWillPop,
           child: Container(
-            color: Colors.white,
-            height: media.size.height,
-            width: media.size.width,
-            child: SingleChildScrollView(
-              child: isPotrait ? _orienPotrait() : _orienLandscape(),
-            )
-          ),
+              color: Colors.white,
+              height: media.size.height,
+              width: media.size.width,
+              child: SingleChildScrollView(
+                child: isPotrait ? _orienPotrait() : _orienLandscape(),
+              )),
         ),
       ),
     );
@@ -142,7 +134,9 @@ class _HomeState extends State<Home> {
         ),
         _buildSelectGender(),
         _buildForm(),
-        SizedBox(height: 60,)
+        SizedBox(
+          height: 60,
+        )
       ],
     );
   }
@@ -151,11 +145,11 @@ class _HomeState extends State<Home> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Expanded(child: Column(
+        Expanded(
+            child: Column(
           children: <Widget>[
             AnimatedDefaultTextStyle(
-              style: GoogleFonts.mcLaren(
-                  fontSize: 15, color: Colors.purple),
+              style: GoogleFonts.mcLaren(fontSize: 15, color: Colors.purple),
               duration: Duration(milliseconds: 500),
               child: Text("Select Gender"),
             ),
@@ -194,9 +188,10 @@ class _HomeState extends State<Home> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            _buildGender("man.svg", colorSelectedMale, colorSecondaryMale,"Male"),
             _buildGender(
-                "woman.svg", colorSelectedFemale, colorSecondaryFemale, "Female"),
+                "man.svg", colorSelectedMale, colorSecondaryMale, "Male"),
+            _buildGender("woman.svg", colorSelectedFemale, colorSecondaryFemale,
+                "Female"),
           ],
         ),
       ),
@@ -208,14 +203,15 @@ class _HomeState extends State<Home> {
       opacity: _opacityForm,
       duration: Duration(milliseconds: 600),
       child: Column(
-
         children: <Widget>[
-          !isPotrait ? AnimatedDefaultTextStyle(
-            style: GoogleFonts.mcLaren(
-                fontSize: 15, color: Colors.purple),
-            duration: Duration(milliseconds: 500),
-            child: Text(""),
-          ) :Container(),
+          !isPotrait
+              ? AnimatedDefaultTextStyle(
+                  style:
+                      GoogleFonts.mcLaren(fontSize: 15, color: Colors.purple),
+                  duration: Duration(milliseconds: 500),
+                  child: Text(""),
+                )
+              : Container(),
           Card(
             elevation: 3,
             shadowColor: themeColor,
@@ -226,19 +222,22 @@ class _HomeState extends State<Home> {
                 children: <Widget>[
                   AnimatedContainer(
                     decoration: BoxDecoration(
-                        color: themeColor, borderRadius: BorderRadius.circular(10)),
+                        color: themeColor,
+                        borderRadius: BorderRadius.circular(10)),
                     margin: EdgeInsets.only(bottom: 10),
                     padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     duration: Duration(milliseconds: 500),
                     child: Text(
                       "Silahkan Masukkan Berat Badan dan Tinggi Badan Anda",
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.mcLaren(color: Colors.white, fontSize: 17),
+                      style: GoogleFonts.mcLaren(
+                          color: Colors.white, fontSize: 17),
                     ),
                   ),
                   AnimatedContainer(
                     decoration: BoxDecoration(
-                        color: themeColor, borderRadius: BorderRadius.circular(10)),
+                        color: themeColor,
+                        borderRadius: BorderRadius.circular(10)),
                     padding: EdgeInsets.symmetric(vertical: 10),
                     duration: Duration(milliseconds: 500),
                     child: Row(
@@ -293,8 +292,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildGender(
-      String fileName, Color colorSelected, Color colorSecondary, String gender) {
+  Widget _buildGender(String fileName, Color colorSelected,
+      Color colorSecondary, String gender) {
     return Expanded(
       child: AnimatedContainer(
           margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),

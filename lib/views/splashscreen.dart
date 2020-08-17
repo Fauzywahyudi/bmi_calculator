@@ -12,13 +12,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final String _dirImage = "assets/images/";
-  styleBMI(Color color){
+  styleBMI(Color color) {
     return GoogleFonts.mcLaren(color: color, fontSize: 40);
   }
 
   @override
   void initState() {
-    Timer(Duration(seconds: 3), ()=>Navigator.pushReplacementNamed(context, Home.routeName) );
+    Timer(Duration(seconds: 3),
+        () => Navigator.pushReplacementNamed(context, Home.routeName));
     super.initState();
   }
 
@@ -33,11 +34,21 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Container(
-                height: Orientation == Orientation.landscape ? MediaQuery.of(context).size.height * 0.4 :MediaQuery.of(context).size.height * 0.6,
-                  child: SvgPicture.asset(_dirImage+"man.svg",color: Colors.white,)),
-              SizedBox(height: 20,),
+                  height: MediaQuery.of(context).orientation ==
+                          Orientation.landscape
+                      ? MediaQuery.of(context).size.height * 0.4
+                      : MediaQuery.of(context).size.height * 0.6,
+                  child: SvgPicture.asset(
+                    _dirImage + "man.svg",
+                    color: Colors.white,
+                  )),
+              SizedBox(
+                height: 20,
+              ),
               RichText(
                 text: TextSpan(
                   text: '',
@@ -45,8 +56,10 @@ class _SplashScreenState extends State<SplashScreen> {
                   children: <TextSpan>[
                     TextSpan(text: 'B', style: styleBMI(Colors.lightBlue)),
                     TextSpan(text: 'M', style: styleBMI(Colors.lightGreen)),
-                    TextSpan(text: 'I ', style: styleBMI(Colors.pink ) ),
-                    TextSpan(text: 'Calculator', style: GoogleFonts.mcLaren(fontSize: 25)),
+                    TextSpan(text: 'I ', style: styleBMI(Colors.pink)),
+                    TextSpan(
+                        text: 'Calculator',
+                        style: GoogleFonts.mcLaren(fontSize: 25)),
                   ],
                 ),
               ),

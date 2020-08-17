@@ -17,7 +17,6 @@ class Result extends StatefulWidget {
 class _ResultState extends State<Result> {
   final String _fileMale = "man.svg";
   final String _fileFemale = "woman.svg";
-  final String _dirImage = "assets/images/";
   Color get themeColor => widget.isMale ? Colors.purple : Colors.pinkAccent;
   String get fileSVG => widget.isMale ? _fileMale : _fileFemale;
 
@@ -25,30 +24,6 @@ class _ResultState extends State<Result> {
 
   double result;
   double resultBrosca;
-
-  Color get _colorStatus => _statusBMI().contains("Kurus")
-      ? Colors.lime
-      : _statusBMI().contains("Gemuk") ? Colors.red : Colors.green;
-
-  String _statusBMI() {
-    String res = "";
-    if (result < 17) {
-      res = "Sangat Kurus";
-    } else if (result >= 17 && result <= 18.5) {
-      res = "Kurus";
-    } else if (result > 18.5 && result <= 25) {
-      res = "Normal";
-    } else if (result > 25 && result <= 27) {
-      res = "Gemuk";
-    } else if (result > 27) {
-      res = "Sangat Gemuk";
-    }
-    return res;
-  }
-
-  TextStyle styleBMI(Color color) {
-    return GoogleFonts.mcLaren(color: color, fontSize: 20);
-  }
 
   @override
   void initState() {
@@ -83,47 +58,106 @@ class _ResultState extends State<Result> {
                 ),
               ),
               MediaQuery.of(context).orientation == Orientation.portrait
-                  ? _orienPotrait()
-                  : _orienLandScape(),
+                  ? OrienPotrait(
+                      isMale: widget.isMale,
+                      file: fileSVG,
+                      resultBMI: result,
+                      resultBrosca: resultBrosca,
+                    )
+                  : OrienLandscape(
+                      isMale: widget.isMale,
+                      file: fileSVG,
+                      resultBMI: result,
+                      resultBrosca: resultBrosca,
+                    ),
             ],
           ),
         ),
       ),
     );
   }
+}
 
-  _orienLandScape() {
+class OrienLandscape extends StatelessWidget {
+  final String file;
+  final bool isMale;
+  final double resultBMI;
+  final double resultBrosca;
+
+  const OrienLandscape(
+      {Key key, this.file, this.isMale, this.resultBMI, this.resultBrosca})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Expanded(
-            child: _buildImage(),
+            child: BuildImage(
+              file: file,
+              isMale: isMale,
+            ),
           ),
           Expanded(
-            child: _buildResult(),
+            child: BuildResult(
+              isMale: isMale,
+              resultBMI: resultBMI,
+              resultBrosca: resultBrosca,
+            ),
           )
         ],
       ),
     );
   }
+}
 
-  _orienPotrait() {
+class OrienPotrait extends StatelessWidget {
+  final String file;
+  final bool isMale;
+  final double resultBMI;
+  final double resultBrosca;
+
+  const OrienPotrait(
+      {Key key, this.file, this.isMale, this.resultBMI, this.resultBrosca})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Expanded(
-          child: _buildImage(),
+          child: BuildImage(
+            file: file,
+            isMale: isMale,
+          ),
         ),
         Expanded(
-          child: _buildResult(),
+          child: BuildResult(
+            isMale: isMale,
+            resultBMI: resultBMI,
+            resultBrosca: resultBrosca,
+          ),
         )
       ],
     ));
   }
+}
 
-  _buildImage() {
+class BuildImage extends StatelessWidget {
+  final String file;
+  final bool isMale;
+
+  const BuildImage({Key key, this.file, this.isMale}) : super(key: key);
+  String get fileSVG => this.file;
+  final String _dirImage = "assets/images/";
+  Color get themeColor => isMale ? Colors.purple : Colors.pinkAccent;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10),
       height: MediaQuery.of(context).orientation == Orientation.portrait
@@ -138,8 +172,46 @@ class _ResultState extends State<Result> {
       ),
     );
   }
+}
 
-  _buildResult() {
+class BuildResult extends StatelessWidget {
+  final double resultBMI;
+  final double resultBrosca;
+  final bool isMale;
+
+  BuildResult({Key key, this.resultBMI, this.resultBrosca, this.isMale})
+      : super(key: key);
+
+  get result => resultBMI;
+  TextStyle styleBMI(Color color) {
+    return GoogleFonts.mcLaren(color: color, fontSize: 20);
+  }
+
+  var resFormat = NumberFormat('###.0', 'en_US');
+  Color get _colorStatus => _statusBMI().contains("Kurus")
+      ? Colors.lime
+      : _statusBMI().contains("Gemuk") ? Colors.red : Colors.green;
+
+  String _statusBMI() {
+    String res = "";
+    if (result < 17) {
+      res = "Sangat Kurus";
+    } else if (result >= 17 && result <= 18.5) {
+      res = "Kurus";
+    } else if (result > 18.5 && result <= 25) {
+      res = "Normal";
+    } else if (result > 25 && result <= 27) {
+      res = "Gemuk";
+    } else if (result > 27) {
+      res = "Sangat Gemuk";
+    }
+    return res;
+  }
+
+  Color get themeColor => isMale ? Colors.purple : Colors.pinkAccent;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(top: 10),
       child: Column(
@@ -205,15 +277,19 @@ class _ResultState extends State<Result> {
               ],
             ),
           ),
-          Expanded(child: Center(child: FlatButton.icon(
-            onPressed: () =>Navigator.pop(context),
-            icon: Icon(Icons.check_circle_outline, color: Colors.white),
-            label: Text(
-              'Selesai',
-              style: TextStyle(color: Colors.white),
+          Expanded(
+            child: Center(
+              child: FlatButton.icon(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(Icons.check_circle_outline, color: Colors.white),
+                label: Text(
+                  'Selesai',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: themeColor,
+              ),
             ),
-            color: themeColor,
-          ),),)
+          )
         ],
       ),
     );
